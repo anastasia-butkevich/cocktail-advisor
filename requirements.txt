@@ -1,10 +1,11 @@
 fastapi
 uvicorn[standard]
 langchain
-langchain-community      
+langchain_groq
+langchain-huggingface
+langchain-community
 faiss-cpu
-requests                  
-python-dotenv             
-openai                    
-sentence-transformers     
-pandas                    
+requests
+python-dotenv
+pandas
+streamlit
