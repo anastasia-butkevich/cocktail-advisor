@@ -16,7 +16,7 @@ class RAGSystem:
     def _load_knowledge_base(self):
         index_path = "data/cocktail_store"
         if os.path.exists(index_path):
-            return FAISS.load_local(index_path, self.embeddings)
+            return FAISS.load_local(index_path, self.embeddings, allow_dangerous_deserialization=True)
         
         df = pd.read_csv("data/final_cocktails.csv")
         docs = [
@@ -47,7 +47,7 @@ class RAGSystem:
     def _load_or_create_preference_store(self):
         preference_index_path = "data/preference_store"
         if os.path.exists(preference_index_path):
-            return FAISS.load_local(preference_index_path, self.embeddings)
+            return FAISS.load_local(preference_index_path, self.embeddings, allow_dangerous_deserialization=True)
         else:
             return None
 
