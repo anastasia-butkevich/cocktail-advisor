@@ -73,15 +73,19 @@ class LLM:
         
         chain = prompt | self.llm
         raw_output = chain.invoke({"text": text})
-        
+
         try:
-            start_idx = raw_output.find('[')
-            end_idx = raw_output.rfind(']') + 1
-            
+            text_output = raw_output.content if hasattr(raw_output, 'content') else raw_output
+
+            start_idx = text_output.find('[')
+            end_idx = text_output.rfind(']') + 1
+
             if start_idx >= 0 and end_idx > start_idx:
-                json_str = raw_output[start_idx:end_idx]
+                json_str = text_output[start_idx:end_idx]
                 data = json.loads(json_str)
                 return [x.strip() for x in data if isinstance(x, str) and x.strip()]
             return []
-        except Exception:
+        except Exception as e:
+            print("Error parsing preferences:", e)
             return []
+

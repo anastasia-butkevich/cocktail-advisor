@@ -1,4 +1,5 @@
 __pycache__/
 data/cocktail_store/
+data/preference_store/
 .env
 venv/
