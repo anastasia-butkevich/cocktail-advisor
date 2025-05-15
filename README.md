@@ -3,7 +3,7 @@
 Firstly, I had to understand fully the task and technologies I will use. I'll start with developing the most simple version of the app and then, if I have time, will add more complicated functionality.
 Main tasks for MVP:
 - FastAPI endpoint: /chat (only one so far)
-- FAISS vector store + HuggingFace embeddings
+- FAISS vector store + Sentence Transformers
 - Detect user preferences
 - Similarity search, docs retrival
 
