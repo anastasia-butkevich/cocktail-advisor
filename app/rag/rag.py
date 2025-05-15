@@ -14,8 +14,11 @@ class RAGSystem:
         self.llm = LLM()
 
     def _load_knowledge_base(self):
+        index_path = "data/cocktail_store"
+        if os.path.exists(index_path):
+            return FAISS.load_local(index_path, self.embeddings)
+        
         df = pd.read_csv("data/final_cocktails.csv")
-
         docs = [
             Document(
                 page_content=(
@@ -30,13 +33,16 @@ class RAGSystem:
                 metadata={
                     "type": "cocktail",
                     "name": row['name'],
-                    "ingredients": row['ingredients'] 
+                    "ingredients": row['ingredients'],
+                    "alcoholic": row['alcoholic']  
                 }
             )
             for _, row in df.iterrows()
         ]
 
-        return FAISS.from_documents(docs, self.embeddings)
+        faiss_index = FAISS.from_documents(docs, self.embeddings)
+        faiss_index.save_local(index_path)
+        return faiss_index
 
     def _load_or_create_preference_store(self):
         preference_index_path = "data/preference_store"
@@ -80,7 +86,11 @@ class RAGSystem:
                     self.preference_store.add_documents(new_docs)
                 self._save_preference_store()
 
-        cocktail_docs = self.cocktail_store.similarity_search(user_input, k=6)
+        cocktail_docs = self.cocktail_store.similarity_search(user_input, k=6)  
+
+        if "non-alcoholic" in user_input.lower() or "non alcoholic" in user_input.lower():
+            cocktail_docs = [doc for doc in cocktail_docs if doc.metadata.get("alcoholic", "") == "Non alcoholic"]
+
         knowledge = "\n---\n".join(doc.page_content for doc in cocktail_docs)
         all_preferences = self._get_user_preferences()
         preference_summary = ", ".join(all_preferences) if all_preferences else "None"

@@ -13,7 +13,7 @@ COPY data ./data
 
 EXPOSE 8000 8501
 
-COPY start.sh run.sh
+COPY run.sh run.sh
 RUN chmod +x run.sh
 
 CMD ["run.sh"]
