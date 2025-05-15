@@ -19,7 +19,7 @@ if user_input := st.chat_input("Ask about cocktails..."):
 
     try:
         response = requests.post(API_URL, json={"message": user_input})
-        answer = response.json()["response"]["content"]
+        answer = response.json()["response"]
     except Exception as e:
         answer = f"Error: {str(e)}"
 
